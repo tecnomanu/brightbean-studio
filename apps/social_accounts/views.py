@@ -581,21 +581,22 @@ def connect_bluesky(request, workspace_id):
 @login_required
 @require_permission("manage_social_accounts")
 def connect_devto(request, workspace_id):
-    """Connect a DEV.to account via a personal API key.
-
-    The key may be pasted in the form, or supplied via the ``DEVTO_API_KEY``
-    environment variable (used as a fallback and to pre-fill the form).
-    """
-    env_key = getattr(settings, "DEVTO_API_KEY", "") or ""
-    context = {"workspace_id": workspace_id, "has_env_key": bool(env_key)}
-
+    """Connect a DEV.to account via a personal API key."""
     if request.method == "GET":
-        return render(request, "social_accounts/devto_connect.html", context)
+        return render(
+            request,
+            "social_accounts/devto_connect.html",
+            {"workspace_id": workspace_id},
+        )
 
-    api_key = request.POST.get("api_key", "").strip() or env_key
+    api_key = request.POST.get("api_key", "").strip()
     if not api_key:
         messages.error(request, "A DEV.to API key is required.")
-        return render(request, "social_accounts/devto_connect.html", context)
+        return render(
+            request,
+            "social_accounts/devto_connect.html",
+            {"workspace_id": workspace_id},
+        )
 
     try:
         provider = _get_provider_for_platform(PlatformCredential.Platform.DEVTO, request.org.id)
