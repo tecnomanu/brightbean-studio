@@ -435,7 +435,15 @@ PLATFORM_CREDENTIALS_FROM_ENV = {
     # on first connect and persisted in MastodonAppRegistration. No repo-wide
     # credentials apply.
     "mastodon": {},
+    # DEV.to - per-account API key (no OAuth). The key is supplied at connect
+    # time; DEVTO_API_KEY (below) is an optional server-side default.
+    "devto": {},
 }
+
+# Optional server-side DEV.to API key. When set, the connect form uses it as a
+# default so an account can be linked without pasting the key into the browser.
+# Named PLATFORM_DEVTO_API_KEY for consistency with the other PLATFORM_* secrets.
+DEVTO_API_KEY = env("PLATFORM_DEVTO_API_KEY", default="")
 
 # Webhook verification
 FACEBOOK_WEBHOOK_VERIFY_TOKEN = env("FACEBOOK_WEBHOOK_VERIFY_TOKEN", default="")

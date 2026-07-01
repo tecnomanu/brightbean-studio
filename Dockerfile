@@ -29,6 +29,10 @@ RUN DJANGO_SETTINGS_MODULE=config.settings.production \
     DATABASE_URL=sqlite:///tmp/build.db \
     python manage.py collectstatic --noinput
 
+RUN chmod +x /app/docker-entrypoint.sh
+
 EXPOSE 8000
 
-CMD gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --threads 2
+# The web service runs migrations (when RUN_MIGRATIONS=true) then gunicorn.
+# The worker overrides the command in its deploy config and is unaffected.
+CMD ["/app/docker-entrypoint.sh"]
